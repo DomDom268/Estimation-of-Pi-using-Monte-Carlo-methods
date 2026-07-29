@@ -22,7 +22,7 @@ def estimate_pi_sobol(samples):
    inside = (x*x + y*y)<=1
    pi_hat = 4 * inside.mean()
 
-   return round(pi_hat,5)
+   return round(pi_hat,5),points
     
 def error(pi):
     return (f"Error = {abs(round(pi-np.pi,4))}"),abs(round(pi-np.pi,4))
@@ -42,7 +42,7 @@ def mean_estimates_and_error(samples,rng):
     for num in samples:
         for i in range(500):
             pi_hat = estimate_pi(num,rng)
-            sobol_pi_hat = estimate_pi_sobol(num)
+            sobol_pi_hat,points = estimate_pi_sobol(num)
 
             estimates[i] = pi_hat
             sobol_estimates[i] = sobol_pi_hat
@@ -67,7 +67,7 @@ def visualize_pi(n_points,pi,rng):
     
     # Plot points inside the circle in blue, outside in red
     ax.scatter(x[inside], y[inside], color='dodgerblue', s=5, label='Inside')
-    scatter = ax.scatter(x[~inside], y[~inside], color='tomato', s=5, label='Outside')
+    ax.scatter(x[~inside], y[~inside], color='tomato', s=5, label='Outside')
     
     # Add a visual boundary for the quarter-circle
     circle = plt.Circle((0, 0), 1, color='black', fill=False, linewidth=2)
@@ -79,6 +79,27 @@ def visualize_pi(n_points,pi,rng):
     ax.set_title(f"$\\pi$ ({pi}) Estimation with {n_points} points")
     return fig
     
+def visualize_pi_sobol(pi,points):
+    x=points[:,0]
+    y=points[:,1]
+    inside = (x*x + y*y )<= 1
+
+    fig, ax = plt.subplots(figsize=(6,6))
+
+    ax.scatter(x[inside], y[inside], color='dodgerblue', s=5, label='Inside')
+    ax.scatter(x[~inside], y[~inside], color='tomato', s=5, label='Outside')
+    
+    # Add a visual boundary for the quarter-circle
+    circle = plt.Circle((0, 0), 1, color='black', fill=False, linewidth=2)
+    ax.add_patch(circle)
+    
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, 1)
+    ax.legend()
+    ax.set_title(f"$\\pi$ ({pi}) Estimation with {len(points)} points")
+    return fig
+
+
 def visualize_convergence(xcoords,ycoords,yscoords):
     
     fig, ax = plt.subplots(figsize=(6,6))
@@ -163,7 +184,7 @@ def repeated_sims(rng):
 
     for i in range(1000):
         pi_hat = estimate_pi(1000,rng)
-        pi_hat_sobol = estimate_pi_sobol(1000)
+        pi_hat_sobol,points = estimate_pi_sobol(1000)
         err = abs(pi_hat-pi)
         sobol_error = abs(pi_hat_sobol-pi)
 
@@ -222,7 +243,7 @@ def estimation(selected_points,rng):
     estimate = estimate_pi(selected_points,rng)
     err = abs(estimate-pi)
 
-    estimate_sobol = estimate_pi_sobol(selected_points)
+    estimate_sobol,points = estimate_pi_sobol(selected_points)
     err_sobol = abs(estimate_sobol-pi)
 
     col1,col2 = st.columns(2)
@@ -237,7 +258,7 @@ def estimation(selected_points,rng):
     with col2:
         st.metric("π (SOBOL)",value=f"{estimate_sobol}",delta=f"{np.pi}",border=True)
         st.metric("Abs Error (SOBOL)",value=f"{round(err_sobol,5)}",border=True)
-        fig_sobol = visualize_pi(selected_points,estimate,rng)
+        fig_sobol = visualize_pi_sobol(estimate_sobol,points)
         st.pyplot(fig_sobol)
 
     st.subheader(f"How it works",text_alignment='center')
