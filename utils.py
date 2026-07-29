@@ -1,6 +1,7 @@
 import streamlit as st
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 from scipy.stats import qmc
 
 def estimate_pi(numPoints, rng):
@@ -90,8 +91,8 @@ def visualize_convergence(coords,coords_sobol):
     fig, ax = plt.subplots(figsize=(6,6))
     
     #Plot points to show convergence of Pi estimates
-    ax.plot(x,y,color='dodgerblue',label='Pi Estimates')
-    ax.plot(xs,ys,color='indigo',label='Pi Estimates(SOBOL)')
+    ax.plot(x,y,color='dodgerblue',label='Mean Estimates')
+    ax.plot(xs,ys,color='indigo',label='Mean Estimates(SOBOL)')
     
     #Add boundary for Pi
     ax.axhline(y=np.pi,color='tomato',linestyle='--',linewidth=1.5,label='Pi')
@@ -116,8 +117,8 @@ def visualize_error(coords,coords_sobol):
 
     fig, ax = plt.subplots(figsize=(6,6))
 
-    ax.plot(x,y,color="indigo",linestyle='-',linewidth=2,label='Absolute Error')
-    ax.plot(xs,ys,color="orange",linestyle='-',linewidth=2,label='Absolute Error(SOBOL)')
+    ax.plot(x,y,color="indigo",linestyle='-',linewidth=2,label='Mean Absolute Error')
+    ax.plot(xs,ys,color="orange",linestyle='-',linewidth=2,label='Mean Absolute Error(SOBOL)')
     ax.plot(x,yt,color="black",linestyle='-.',linewidth=2,label='Theoretical Absolute Error')
     ax.plot(x,yst,color="green",linestyle='-.',linewidth=2,label='Theoretical Absolute Error(SOBOL)')
 
@@ -135,7 +136,7 @@ def histogram(estimates,sobol_estimates,bins):
     fig,ax = plt.subplots(figsize=(6,6))
     ax.hist(estimates,bins=bins,alpha=0.6,density=True,color='dodgerblue',edgecolor='black',label='MC')
     ax.hist(sobol_estimates,bins=bins,alpha=0.6,density=True,color='tomato',edgecolor='black',label='SOBOL')
-    ax.axvline(x=np.pi,color='tomato',linestyle='-',linewidth=1.5,label='Pi')
+    ax.axvline(x=np.pi,color='black',linestyle='--',linewidth=1.5,label='Pi')
     ax.legend()
     ax.set_title(f"Comparison of Estimates: N=1000; Number of Samples = 100")
     return fig
@@ -144,7 +145,7 @@ def std_dev(estimates, mean,n_points):
     deviations = [(x-mean)**2 for x in estimates]
     sum = np.sum(deviations)
     var = np.sqrt(sum/(n_points-1))
-    return round(var,5)
+    return var, round(var,5)
 
 def mse(estimates,mean,n_points):
     error = [(x-mean) for x in estimates]
@@ -163,10 +164,106 @@ def descriptive_stats(estimates,errors):
     mean = sum(estimates)/len(estimates)
     msqe= mse(estimates,mean,len(estimates))
     maer = mae(errors,len(errors))
-    sd=std_dev(estimates,mean,len(estimates))
+    var, sd=std_dev(estimates,mean,len(estimates))
     min_est=min(estimates)
     max_est=max(estimates)
 
-    return round(mean,5), msqe,maer, sd,min_est, max_est
+    return round(mean,5), msqe,maer, var,sd,min_est, max_est
+
+def repeated_sims(rng):
+    estimates = []
+    sobol_estimates = []
+    errors = []
+    sobol_errors = []
+
+    for i in range(1000):
+        pi_hat = estimate_pi(1000,rng)
+        pi_hat_sobol = estimate_pi_sobol(1000)
+        err_message,err = error(pi_hat)
+        sobol_err_message, sobol_error = error(pi_hat_sobol)
+
+        estimates.append(pi_hat)
+        errors.append(err)
+        sobol_estimates.append(pi_hat_sobol)
+        sobol_errors.append(sobol_error)
+
+
+    fig = histogram(estimates,sobol_estimates,10)
+    st.pyplot(fig)
+
+    st.subheader("Results",text_alignment='center')
+    mean,msqe,maer,var,sd,min_est,max_est = descriptive_stats(estimates,errors)
+    sobol_mean,sobol_msqe,sobol_maer,sobol_var,sobol_sd,sobol_min_est,sobol_max_est = descriptive_stats(sobol_estimates,sobol_errors)
+
+    col1, col2 = st.columns(2)
+    with col1:
+        st.metric("MC Mean Estimate",value=f"{mean}",delta=f"{np.pi}",border=True)
+        st.metric("MC VAR",value=f"{var}",border=True)
+        st.metric("MC STDEV",value=f"{sd}",border=True)
+
+    with col2:
+        st.metric("SOBOL Mean Estimate",value=f"{sobol_mean}",delta=f"{np.pi}",border=True)
+        st.metric("SOBOL VAR",value=f"{sobol_var}",border=True)
+        st.metric("SOBOL STDEV",value=f"{sobol_sd}",border=True)
+
+    stats = {
+        "Method":['Monte Carlo','SOBOL'],
+        "Mean Estimate":[mean,sobol_mean],
+        "Mean Squared Error":[msqe,sobol_msqe],
+        "Mean Average Error":[maer,sobol_maer],
+        "Variance":[var,sobol_var],
+        "Standard Deviation":[sd,sobol_sd],
+        "Min Estimate":[min_est,sobol_min_est],
+        "Max Estimate":[max_est,sobol_max_est]
+    }
+    table1 = pd.DataFrame(stats)
+    st.dataframe(table1)
+
+def plots(samples,rng):
+    estimates = []
+    errors = []
+    sobol_estimates = []
+    sobol_errors = []
+    mean_estimates = []
+    mean_errors = []
+    sobol_mean_estimates = []
+    sobol_mean_errors = []
+
+    for num in samples:
+        for i in range(500):
+            pi_hat = estimate_pi(num,rng)
+            err_message,err = error(pi_hat)
+            sobol_pi_hat = estimate_pi_sobol(num)
+            sobol_err_message,sobol_err = error(sobol_pi_hat)
+
+            estimates.append(pi_hat)
+            errors.append(err)
+            sobol_estimates.append(sobol_pi_hat)
+            sobol_errors.append(sobol_err)
+
+        mean,msqe,maer,sd,min_est,max_est = descriptive_stats(estimates,errors)
+        sobol_mean,sobol_msqe,sobol_maer,sobol_sd,sobol_min_est,sobol_max_est = descriptive_stats(sobol_estimates,sobol_errors)
+        mean_estimates.append(mean)
+        mean_errors.append(maer)
+        sobol_mean_estimates.append(sobol_mean)
+        sobol_mean_errors.append(sobol_maer)
+
+    estimates_coords = list(zip(samples,mean_estimates))
+    error_coords = list(zip(samples,mean_errors))
+    sobol_estimates_coords = list(zip(samples, sobol_mean_estimates))
+    sobol_error_coords = list(zip(samples,sobol_mean_errors))
+
+    convergence_plot = visualize_convergence(estimates_coords,sobol_estimates_coords)
+    st.pyplot(convergence_plot)
+
+    error_plot = visualize_error(error_coords,sobol_error_coords)
+    st.pyplot(error_plot)
+
+
+
+
+
+
+
 
 
