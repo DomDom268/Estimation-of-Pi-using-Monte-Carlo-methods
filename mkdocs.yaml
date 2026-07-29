@@ -1,0 +1,6 @@
+site_name: Pi-thon 
+
+nav: 
+  - Home: index.md
+  - Getting Started: user_guide.md
+  - Example: results.md
