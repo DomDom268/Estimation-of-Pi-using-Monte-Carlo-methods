@@ -27,6 +27,12 @@ This app allows users to explore this concept interactively.
 
 ---
 
+## ❓Why Monte Carlo
+
+Monte Carlo simulations and integration are an integral part of various technical fields such as scientific computing, finance (risk management) and bayesian machine learning
+as it provides a trivial way to approximate possible deterministic events using randomness. As a prospective mathematics graduate student, I was interested in utilizig this
+numerical method as I find fascinating how geometry and stochastics could be used to approximate such a pivotal mathematical figure in Pi.
+
 ## 🧠 Features
 
 * Select number of simulation points:
@@ -38,7 +44,17 @@ This app allows users to explore this concept interactively.
 
   * Points inside the circle
   * Points outside the circle
+* Visual convergence plot:
+  * Estimation of pi at different number of samples
+  * Numpy Pi reference boundary
+* Visual Absolute Error line plot:
+  * Absolute error of each estimate at different number of samples
+* Histogram plot:
+  * Shows distribution of estimates after running experiment 1000 times
+  * Shows Central Limit Theorem in action as the ratio mimics a Bernoulli distribution(0-inside circle;1-outside cirlce)
+  * Shows descriptive statistics(mean, min,max, std dev,mse)
 * Clean and interactive UI powered by Streamlit
+
 
 ---
 
@@ -53,9 +69,18 @@ This app allows users to explore this concept interactively.
 
 ## 📊 Example Output
 
-* Estimated π value
-* Absolute error from true π
-* Visualization of random sampling and geometric boundary
+* Run Simulation:
+  * Estimated π value
+  * Absolute error from true π
+  * Visualization of random sampling and geometric boundary
+* Plot Convergence
+  * Visualization of estimate convergence to numpy's Pi
+* Plot Error:
+  * Visualization of absolute error converging to 0 as number of samples increases
+* Run repeated experiments:
+  * Runs simulation 1000 times
+  * Calculates and displays descriptive statistics
+  * Visualizes distribution of estimates and the resemblence to a Gaussian Distribution
 
 ---
 
@@ -100,7 +125,6 @@ streamlit run app.py
 
 ## 📈 Future Improvements
 
-* Convergence plot (error vs number of points)
 * Animation of point generation
 * Log-scale visualization of error decay
 * Extension to higher-dimensional Monte Carlo integration
@@ -113,6 +137,7 @@ This project demonstrates:
 
 * Monte Carlo simulation techniques
 * Numerical approximation methods
+* Calculating descriptive statistics
 * Visualization of stochastic processes
 * Building interactive data apps
 
@@ -121,7 +146,7 @@ This project demonstrates:
 ## 👤 Author
 
 Dominic Christopher
-HBA Candidate | Data & Quantitative Analysis Enthusiast
+Mathematics Graduate Student(Msc) | Western Illinois University
 
 ---
 
