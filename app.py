@@ -1,5 +1,6 @@
 import streamlit as st
 import numpy as np
+import pandas as pd
 import utils as u
 
 
@@ -63,34 +64,56 @@ if st.sidebar.button("Plot Absolute Error"):
 if st.sidebar.button("Run 1000 Repeated Simulations"):
     estimates = []
     sobol_estimates = []
+    errors = []
+    sobol_errors = []
 
     for i in range(1000):
-        estimates.append(u.estimate_pi(10000,rng))
-        sobol_estimates.append(u.estimate_pi_sobol(10000))
+        pi_hat = u.estimate_pi(1000,rng)
+        pi_hat_sobol = u.estimate_pi_sobol(1000)
+        err_message,error = u.error(pi_hat)
+        sobol_err_message, sobol_error = u.error(pi_hat_sobol)
 
-    fig = u.histogram(estimates,10)
+        estimates.append(pi_hat)
+        errors.append(error)
+        sobol_estimates.append(pi_hat_sobol)
+        sobol_errors.append(sobol_error)
+
+
+    fig = u.histogram(estimates,sobol_estimates,10)
     st.pyplot(fig)
 
-    mean,msqe,sd,min_est,max_est = u.descriptive_stats(estimates)
+    st.subheader("Monte Carlo Results",text_alignment='center')
+    mean,msqe,maer,sd,min_est,max_est = u.descriptive_stats(estimates,errors)
 
     st.subheader(f"Mean= {mean}") 
     st.subheader(f"Mean Squared Error: {msqe}")
+    st.subheader(f"Mean Average Error: {maer}")
     st.subheader(f"Standard Deviation: {sd}")
     st.subheader(f"Min:{min_est}")
     st.subheader(f"Max:{max_est}")
 
     st.subheader("SOBOL Results",text_alignment='center')
-    #SOBOL 
-    sobol_fig = u.histogram(sobol_estimates,10)
-    st.pyplot(sobol_fig)
-    
-    sobol_mean,sobol_msqe,sobol_sd,sobol_min_est,sobol_max_est = u.descriptive_stats(sobol_estimates)
+    sobol_mean,sobol_msqe,sobol_maer,sobol_sd,sobol_min_est,sobol_max_est = u.descriptive_stats(sobol_estimates,sobol_errors)
 
     st.subheader(f"Mean= {sobol_mean}") 
     st.subheader(f"Mean Squared Error: {sobol_msqe}")
+    st.subheader(f"Mean Average Error: {sobol_maer}")
     st.subheader(f"Standard Deviation: {sobol_sd}")
     st.subheader(f"Min:{sobol_min_est}")
     st.subheader(f"Max:{sobol_max_est}")
+
+    stats = {
+        "Method":['Monte Carlo','SOBOL'],
+        "Mean Estimate":[mean,sobol_mean],
+        "Mean Squared Error":[msqe,sobol_msqe],
+        "Mean Average Error":[maer,sobol_maer],
+        "Standard Deviation":[sd,sobol_sd],
+        "Min Estimate":[min_est,sobol_min_est],
+        "Max Estimate":[max_est,sobol_max_est]
+    }
+    table1 = pd.Dataframe(stats)
+    st.dataframe(table1)
+
 
 
     

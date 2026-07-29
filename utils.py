@@ -24,7 +24,7 @@ def estimate_pi_sobol(samples):
    return round(pi_hat,5)
     
 def error(pi):
-    return (f"Error = {abs(round(np.pi-pi,4))}"),abs(round(np.pi-pi,4))
+    return (f"Error = {abs(round(pi-np.pi,4))}"),abs(round(pi-np.pi,4))
 
 def visualize_pi(n_points,pi,rng):
     x=rng.random(n_points)
@@ -94,10 +94,11 @@ def visualize_convergence(coords,coords_sobol):
     ax.plot(xs,ys,color='indigo',label='Pi Estimates(SOBOL)')
     
     #Add boundary for Pi
-    ax.axhline(y=np.pi,color='tomato',linestyle='-',linewidth=1.5,label='Pi')
+    ax.axhline(y=np.pi,color='tomato',linestyle='--',linewidth=1.5,label='Pi')
 
-    ax.set_xlim(0,1000000,auto=True)
-    ax.set_ylim(2.0,3.6)
+    ax.set_xscale("log")
+    ax.set_xlim(10,1000000)
+    ax.set_ylim(3.0,3.6)
     ax.margins(x=0.05)
     ax.legend()
     ax.set_title(f"Convergence Plot of Pi")
@@ -111,22 +112,29 @@ def visualize_error(coords,coords_sobol):
     ys=[y for x,y in coords_sobol]
 
     yt = [pow(xt,-0.5) for xt in x]
+    yst =[pow(xt,-1) for xt in x]
 
     fig, ax = plt.subplots(figsize=(6,6))
 
     ax.plot(x,y,color="indigo",linestyle='-',linewidth=2,label='Absolute Error')
-    ax.plot(xs,ys,color="orange",linestyle='--',linewidth=2,label='Absolute Error(SOBOL)')
+    ax.plot(xs,ys,color="orange",linestyle='-',linewidth=2,label='Absolute Error(SOBOL)')
     ax.plot(x,yt,color="black",linestyle='-.',linewidth=2,label='Theoretical Absolute Error')
+    ax.plot(x,yst,color="green",linestyle='-.',linewidth=2,label='Theoretical Absolute Error(SOBOL)')
 
     ax.margins(x=0.05)
+    ax.set_xscale("log")
+    ax.set_yscale("log")
+    ax.set_ylim(1e-4,1e0)
+    ax.set_xlim(10,1000000)
     ax.legend()
     ax.set_title(f"Absolute Error vs Sample Size")
     return fig
 
-def histogram(estimates,bins):
+def histogram(estimates,sobol_estimates,bins):
 
     fig,ax = plt.subplots(figsize=(6,6))
-    ax.hist(estimates,bins=bins,density=True,color='dodgerblue',edgecolor='black')
+    ax.hist(estimates,bins=bins,alpha=0.6,density=True,color='dodgerblue',edgecolor='black',label='MC')
+    ax.hist(sobol_estimates,bins=bins,alpha=0.6,density=True,color='tomato',edgecolor='black',label='SOBOL')
     ax.axvline(x=np.pi,color='tomato',linestyle='-',linewidth=1.5,label='Pi')
     ax.legend()
     ax.set_title(f"Comparison of Estimates: N=1000; Number of Samples = 100")
@@ -145,14 +153,20 @@ def mse(estimates,mean,n_points):
     msqe=sum/n_points
     return round(msqe,5)
 
-def descriptive_stats(estimates):
+def mae(errors,n_points):
+    sum = np.sum(errors)
+    maer = sum/n_points
+    return round(maer,5)
+
+def descriptive_stats(estimates,errors):
     
     mean = sum(estimates)/len(estimates)
     msqe= mse(estimates,mean,len(estimates))
+    maer = mae(errors,len(errors))
     sd=std_dev(estimates,mean,len(estimates))
     min_est=min(estimates)
     max_est=max(estimates)
 
-    return round(mean,5), msqe, sd,min_est, max_est
+    return round(mean,5), msqe,maer, sd,min_est, max_est
 
 
