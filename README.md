@@ -6,7 +6,7 @@ This project is an interactive web application built with Streamlit that demonst
 
 ## 🚀 Live Demo
 
-*(Add your Streamlit link here after deployment)*
+*Streamlit deployment coming soon*
 
 ---
 
