@@ -148,7 +148,7 @@ def histogram(estimates,sobol_estimates,bins):
     ax.hist(sobol_estimates,bins=bins,alpha=0.6,density=True,color='tomato',edgecolor='black',label='SOBOL')
     ax.axvline(x=np.pi,color='black',linestyle='--',linewidth=1.5,label='Pi')
     ax.legend()
-    ax.set_title(f"Comparison of Estimates: N=1000; Number of Samples = 100")
+    ax.set_title(f"Comparison of Estimates: N=1000; Number of Samples = 1000")
     return fig
 
 def mse(estimates,mean,n_points):
