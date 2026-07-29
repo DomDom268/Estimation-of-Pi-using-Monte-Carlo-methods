@@ -110,10 +110,13 @@ def visualize_error(coords,coords_sobol):
     xs=[x for x,y in coords_sobol]
     ys=[y for x,y in coords_sobol]
 
+    yt = [pow(xt,-0.5) for xt in x]
+
     fig, ax = plt.subplots(figsize=(6,6))
 
     ax.plot(x,y,color="indigo",linestyle='-',linewidth=2,label='Absolute Error')
-    ax.plot(xs,ys,color="orange",linestyle='-',linewidth=2,label='Absolute Error(SOBOL)')
+    ax.plot(xs,ys,color="orange",linestyle='--',linewidth=2,label='Absolute Error(SOBOL)')
+    ax.plot(x,yt,color="black",linestyle='-.',linewidth=2,label='Theoretical Absolute Error')
 
     ax.margins(x=0.05)
     ax.legend()
