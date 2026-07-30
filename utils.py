@@ -3,9 +3,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from scipy.stats import qmc
+from multiprocessing import Pool
+from functools import partial
 
-def estimate_pi(numPoints, rng):
-     
+def estimate_pi(numPoints, seed):
+    rng = np.random.default_rng(seed=seed)
     x=rng.random(numPoints)
     y=rng.random(numPoints)
     inside = (x*x + y*y) <= 1
@@ -27,36 +29,42 @@ def estimate_pi_sobol(samples):
 def error(pi):
     return (f"Error = {abs(round(pi-np.pi,4))}"),abs(round(pi-np.pi,4))
 
-def mean_estimates_and_error(samples,rng):
+def mean_estimates_and_error(sample_size,seed):
 
     estimates = np.empty(500)
     sobol_estimates = np.empty(500)
     errors = np.empty(500)
     sobol_errors = np.empty(500)
-    y_converge = []
-    ys_converge = []
-    y_mae = []
-    ys_mae = []
+    # y_converge = []
+    # ys_converge = []
+    # y_mae = []
+    # ys_mae = []
     pi = np.pi
 
-    for num in samples:
-        for i in range(500):
-            pi_hat = estimate_pi(num,rng)
-            sobol_pi_hat,points = estimate_pi_sobol(num)
 
-            estimates[i] = pi_hat
-            sobol_estimates[i] = sobol_pi_hat
-            errors[i] = abs(pi_hat-pi)
-            sobol_errors[i] = abs(sobol_pi_hat-pi)
+    for i in range(500):
+        pi_hat = estimate_pi(sample_size,seed)
+        sobol_pi_hat,points = estimate_pi_sobol(sample_size)
 
-        y_converge.append(estimates.mean())
-        ys_converge.append(sobol_estimates.mean())
-        y_mae.append(errors.mean())
-        ys_mae.append(sobol_errors.mean())
+        estimates[i] = pi_hat
+        sobol_estimates[i] = sobol_pi_hat
+        errors[i] = abs(pi_hat-pi)
+        sobol_errors[i] = abs(sobol_pi_hat-pi)
 
-    return y_converge,ys_converge,y_mae,ys_mae
+    mean = estimates.mean()
+    sobol_mean = sobol_estimates.mean()
+    mc_mae = errors.mean()
+    sobol_mae = sobol_errors.mean()
 
-def visualize_pi(n_points,pi,rng):
+    return {
+        "mc_mean":mean,
+        "sobol_mean": sobol_mean,
+        "mc_mae": mc_mae,
+        "sobol_mae": sobol_mae
+    }
+
+def visualize_pi(n_points,pi,seed):
+    rng = np.random.default_rng(seed=seed)
     x=rng.random(n_points)
     y=rng.random(n_points)
     inside = (x*x + y*y) <= 1
@@ -175,7 +183,7 @@ def descriptive_stats(estimates: np.array,errors: np.array):
 
     return round(mean,5), msqe,maer, round(var,5),round(sd,5),min_est, max_est
 
-def repeated_sims(rng):
+def repeated_sims(seed):
     estimates = np.empty(1000)
     sobol_estimates = np.empty(1000)
     errors = np.empty(1000)
@@ -183,7 +191,7 @@ def repeated_sims(rng):
     pi = np.pi
 
     for i in range(1000):
-        pi_hat = estimate_pi(1000,rng)
+        pi_hat = estimate_pi(1000,seed)
         pi_hat_sobol,points = estimate_pi_sobol(1000)
         err = abs(pi_hat-pi)
         sobol_error = abs(pi_hat_sobol-pi)
@@ -225,10 +233,16 @@ def repeated_sims(rng):
     table1 = pd.DataFrame(stats)
     st.dataframe(table1)
 
-def plots(samples,rng):
+def plots(samples,seed):
     
-    
-    y_converge,ys_converge,y_mae,ys_mae = mean_estimates_and_error(samples,rng)
+    with Pool(6) as pool:
+        func = partial(mean_estimates_and_error,seed=seed)
+        results = pool.map(func,samples)
+
+    y_converge = [r["mc_mean"] for r in results]
+    ys_converge = [r["sobol_mean"] for r in results]
+    y_mae = [r["mc_mae"] for r in results]
+    ys_mae = [r["sobol_mae"] for r in results]
 
        
 
