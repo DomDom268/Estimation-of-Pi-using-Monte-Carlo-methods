@@ -44,6 +44,25 @@ Monte Carlo simulations and integration are an integral part of various technica
 as it provides a trivial way to approximate possible deterministic events using randomness. As a prospective mathematics graduate student, I was interested in utilizig this
 numerical method as I find fascinating how geometry and stochastics could be used to approximate such a pivotal mathematical figure in Pi.
 
+## Monte Carlo vs Quasi Monte Carlo
+
+These are both methods of numerical integration and simulation, however they differ in how the sample points are generated and in their convergence properties. In this project I chose
+to use SOBOL as my Quasi Monte Carlo Method. A comparison in methods can be found in the table below:
+
+| Monte Carlo | Sobol |
+|-------------|---------------------------------------------------------------------------------|
+|Sampling in pseudorandom|Sampling is deterministic and designed to be more uniformly distributed|
+|O(N^-0.5) Convergence | O(n^-1) Convergence|
+|Simple and robust|More complicated to implement|
+|Slow convergence|Faster convergence|
+|Works well in high dimension|Works best in low-medium dimension|
+
+
+## Optimizations
+
+Naive for loops in Python abided by a time constraint of O(n) which, after utlizing, I found to be too slow for my use case. Thus, I utilized NumPy vectorization to 
+then increase the speed of my estimation when multiple simulations were needed. Benchmark results can be found below:
+
 ## 🧠 Features
 
 * Select number of simulation points:
@@ -75,6 +94,7 @@ numerical method as I find fascinating how geometry and stochastics could be use
 * NumPy
 * Matplotlib
 * Streamlit
+* Scipy
 
 ---
 
