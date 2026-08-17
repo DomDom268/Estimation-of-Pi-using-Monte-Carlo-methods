@@ -1,9 +1,20 @@
 # 🎯 Monte Carlo Estimation of π (Interactive App)
 
-This project is an interactive web application built with Streamlit that demonstrates how to estimate π using a Monte Carlo simulation. Users can experiment with different sample sizes and visually observe how the approximation improves as the number of random points increases.
+This project is an interactive web application built with Streamlit that demonstrates how to estimate π using a Monte Carlo simulation. Users can experiment with different sample sizes and visually observe how the approximation improves as the number of random points increases. 
 
 ---
 
+---
+## Example Plots
+
+![Estimation of Pi](images/estimation.png)
+
+![Convergence Plot of Estimates](images/convergence.png)
+
+![Convergence Plot of Mean Absolute Error](images/mae.png)
+
+![Distribution of Estimates](images/distribution.png)
+---
 ## 🚀 Live Demo
 
 *Streamlit deployment coming soon*
