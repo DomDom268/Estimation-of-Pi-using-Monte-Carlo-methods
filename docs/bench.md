@@ -1,7 +1,4 @@
 
-### `benchmarks.md`
-
-```md
 # Performance Benchmarks
 
 ## 1. Purpose

@@ -1,68 +1,65 @@
 # Monte Carlo Estimation of π
 
-This project is an interactive web application built with Streamlit that demonstrates how to estimate π using a Monte Carlo simulation. Users can experiment with different sample sizes and visually observe how the approximation improves as the number of random points increases.
+## Overview
 
----
+This project implements a Monte Carlo method for estimating the value of $\pi$ using uniformly distributed random points.
 
-## 🚀 Live Demo
+The project was developed to explore the relationship between mathematical theory, numerical computation, software implementation, and empirical performance.
 
-*Streamlit deployment coming soon*
+The application provides an interactive Streamlit interface where users can:
 
----
+- Select a random seed.
+- Select a predetermined number of points.
+- Run the Monte Carlo simulation.
+- View the resulting estimate of $\pi$.
 
-## 📌 Overview
+The project also includes an automated test suite and performance benchmarks comparing a naive Python implementation with a vectorized NumPy implementation.
 
-The Monte Carlo method estimates π by randomly generating points inside a unit square and measuring how many fall inside a quarter circle.
+## Mathematical Approach
 
-Since:
+The estimator is based on the ratio between the area of a quarter circle and the area of its enclosing unit square.
 
-* Area of quarter circle = π/4
-* Area of square = 1
+For a point $(x,y)$ uniformly distributed on $[0,1]^2$, the point lies inside the quarter circle when
 
-We can estimate:
+$$
+x^2+y^2 \leq 1.
+$$
 
-π ≈ 4 × (points inside circle / total points)
+If $N$ points are generated and $K$ points fall inside the quarter circle, then the estimate is
 
-This app allows users to explore this concept interactively.
+$$
+\hat{\pi}=4\frac{K}{N}.
+$$
 
----
+A more detailed derivation is provided in the [Mathematical Foundation](mathematics.md) section.
 
-## ❓Why Monte Carlo
+## Computational Approach
 
-Monte Carlo simulations and integration are an integral part of various technical fields such as scientific computing, finance (risk management) and bayesian machine learning
-as it provides a trivial way to approximate possible deterministic events using randomness. As a prospective mathematics graduate student, I was interested in utilizig this
-numerical method as I find fascinating how geometry and stochastics could be used to approximate such a pivotal mathematical figure in Pi.
+Two implementations were developed:
 
-## 🧠 Features
+1. A naive implementation using Python loops.
+2. A vectorized implementation using NumPy operations.
 
-* Select number of simulation points:
+The mathematical estimator is identical in both implementations. The primary difference is how the computation is performed.
 
-  * 10, 100, 1,000, 10,000, 100,000, 1,000,000
-* Real-time estimation of π
-* Error calculation vs true value of π
-* Visual scatter plot:
+The performance of the two implementations is evaluated using benchmarks.
 
-  * Points inside the circle
-  * Points outside the circle
-* Visual convergence plot:
-  * Estimation of pi at different number of samples
-  * Numpy Pi reference boundary
-* Visual Absolute Error line plot:
-  * Absolute error of each estimate at different number of samples
-* Histogram plot:
-  * Shows distribution of estimates after running experiment 1000 times
-  * Shows Central Limit Theorem in action as the ratio mimics a Bernoulli distribution(0-inside circle;1-outside cirlce)
-  * Shows descriptive statistics(mean, min,max, std dev,mse)
-* Clean and interactive UI powered by Streamlit
+## Project Goals
 
+The primary goals of this project are to:
 
----
+- Implement a Monte Carlo estimator for $\pi$.
+- Understand the mathematical basis of the estimator.
+- Investigate convergence and estimation error.
+- Compare naive and vectorized implementations.
+- Develop reproducible computational experiments.
+- Practice automated testing with `pytest`.
+- Integrate automated testing into a CI pipeline.
+- Document both mathematical and software design decisions.
 
-## 🛠️ Tech Stack
+## Documentation
 
-* Python
-* NumPy
-* Matplotlib
-* Streamlit
-
----
+- [Mathematical Foundation](mathematics.md)
+- [Implementation](implementation.md)
+- [Testing](test.md)
+- [Benchmarks](bench.md)
