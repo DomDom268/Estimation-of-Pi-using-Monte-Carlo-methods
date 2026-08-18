@@ -2,7 +2,6 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 import utils as u
-import vector as v
 from scipy.stats import qmc
 
 
@@ -24,14 +23,14 @@ selected_points = st.sidebar.radio(
 )
 
 if st.sidebar.button(f"Estimate Pi with {selected_points} generated"):
-    u.estimation(selected_points,rng)
+    u.estimation(selected_points,rng,seed)
     
 
 if st.sidebar.button("Plot convergence of average estimate for 1000 simulations"):
     mc_est,mc_err = u.simulations(rng,points)
     qmc_est,qmc_err = u.qmc_simulations(sampler,points)
 
-    convergence_fig = v.pi_convergence(mc_est,qmc_est,points)
+    convergence_fig = u.pi_convergence(mc_est,qmc_est,points)
     st.pyplot(convergence_fig)
 
 if st.sidebar.button("Plot convergence of mae for 1000 simulations"):
