@@ -62,7 +62,14 @@ to use SOBOL as my Quasi Monte Carlo Method. A comparison in methods can be foun
 
 Naive for loops in Python abided by a time constraint of O(n) which, after utlizing, I found to be too slow for my use case. Thus, I utilized NumPy vectorization to 
 then increase the speed of my estimation when multiple simulations were needed. Outside of raw computational speed, optimizations can be made in the mathematical accuracy of the estimations
-by using a quasi monte carlo method such as sobol sequencing. Due to its deterministic generation and faster error convergence, generating random points with a sobol sequence
+by using a quasi monte carlo method such as sobol sequencing. Due to its deterministic generation and faster error convergence, generating random points with a sobol sequence allow for closer estimates
+with smaller number of points generated
+
+|Method|Execution Time|Speedup|
+|:------|:------|:------|
+|Naive Loops|0.1792s|1.0x|
+|Vectorized MC|0.0072s|24.8x|
+|Vectorized QMC|0.0156s|11.5x|
 
 
 ## 🧠 Features
