@@ -54,7 +54,7 @@ def vectorized_qmc_estimator(numTrials:int,numPoints:int)->np.ndarray:
     return 4*np.sum(inside_circle,axis=2)/numPoints
 
 def run_bench():
-    numTrials=5
+    numTrials=8
     numPoints=2**16
 
     methods={

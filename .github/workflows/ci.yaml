@@ -1,0 +1,32 @@
+name: Pi Continuous Inteegration
+
+on:
+  push:
+    branches: main
+  
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: False
+      matrix: ["3.10","3.11","3.12"]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Ptython ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+        cache: 'pip' #Caches downloads for faster setup of dependencies in the future
+    
+    -name: Install dependencies
+    run: |
+      python -m pip install --upgrade pip
+      if [ -f requirements.txt ]; then pip install -r requirements.txt;
+      pip install pytest pytest-cov
+
+    -name: Run test suite with pytest
+    run: |
+      python -m pytest tests/    
