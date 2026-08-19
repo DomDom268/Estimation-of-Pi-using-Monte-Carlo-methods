@@ -54,15 +54,17 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#2-monte-carlo-estimator">2. Monte Carlo Estimator</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#3-expected-value">3. Expected Value</a>
+    <li class="toctree-l2"><a class="reference internal" href="#3-monte-carlo-vs-quasi-monte-carlo">3. Monte Carlo vs Quasi Monte Carlo</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#4-convergence">4. Convergence</a>
+    <li class="toctree-l2"><a class="reference internal" href="#4-expected-value">4. Expected Value</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#5-variance-and-error">5. Variance and Error</a>
+    <li class="toctree-l2"><a class="reference internal" href="#5-convergence">5. Convergence</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#6-estimator-bounds">6. Estimator Bounds</a>
+    <li class="toctree-l2"><a class="reference internal" href="#6-variance-and-error">6. Variance and Error</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#7-limitations">7. Limitations</a>
+    <li class="toctree-l2"><a class="reference internal" href="#7-estimator-bounds">7. Estimator Bounds</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#8-limitations">8. Limitations</a>
     </li>
     </ul>
                 </li>
@@ -169,7 +171,40 @@ K=\sum_{i=1}^{N}I_i.
 \frac{4}{N}
 \sum_{i=1}^{N}I_i.
 \]</div>
-<h2 id="3-expected-value">3. Expected Value</h2>
+<h2 id="3-monte-carlo-vs-quasi-monte-carlo">3. Monte Carlo vs Quasi Monte Carlo</h2>
+<p>These are both methods of numerical integration and simulation, however they differ in how the sample points are generated and in their convergence properties. </p>
+<p>In this project I chose to use SOBOL as my Quasi Monte Carlo Method. A comparison in methods can be found in the table below:</p>
+<table>
+<thead>
+<tr>
+<th>Monte Carlo</th>
+<th>Sobol</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sampling in pseudorandom</td>
+<td>Sampling is deterministic and designed to be more uniformly distributed</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(O(N^{-1/2})\)</span> Convergence</td>
+<td><span class="arithmatex">\(O(N^{-1})\)</span> Convergence</td>
+</tr>
+<tr>
+<td>Simple and robust</td>
+<td>More complicated to implement</td>
+</tr>
+<tr>
+<td>Slow convergence</td>
+<td>Faster convergence</td>
+</tr>
+<tr>
+<td>Works well in high dimension</td>
+<td>Works best in low-medium dimension</td>
+</tr>
+</tbody>
+</table>
+<h2 id="4-expected-value">4. Expected Value</h2>
 <p>Since each <span class="arithmatex">\(I_i\)</span> is a Bernoulli random variable with</p>
 <div class="arithmatex">\[
 p=P(X_i^2+Y_i^2\leq1)=\frac{\pi}{4},
@@ -210,7 +245,7 @@ N\frac{\pi}{4}
 \boxed{E[\hat{\pi}]=\pi}
 \]</div>
 <p>and the estimator is unbiased.</p>
-<h2 id="4-convergence">4. Convergence</h2>
+<h2 id="5-convergence">5. Convergence</h2>
 <p>By the Law of Large Numbers,</p>
 <div class="arithmatex">\[
 \frac{1}{N}\sum_{i=1}^{N}I_i
@@ -231,7 +266,7 @@ E[I_i]
 \]</div>
 <p>Thus, increasing the number of samples causes the Monte Carlo estimate to converge toward <span class="arithmatex">\(\pi\)</span>.</p>
 <p>However, convergence does not imply that every individual estimate becomes progressively closer to <span class="arithmatex">\(\pi\)</span>. Because the method is stochastic, individual estimates may fluctuate.</p>
-<h2 id="5-variance-and-error">5. Variance and Error</h2>
+<h2 id="6-variance-and-error">6. Variance and Error</h2>
 <p>Because <span class="arithmatex">\(I_i\)</span> is Bernoulli with</p>
 <div class="arithmatex">\[
 p=\frac{\pi}{4},
@@ -280,7 +315,7 @@ p(1-p).
 \frac{1}{\sqrt{N}}.
 \]</div>
 <p>Therefore, substantially more samples are required to obtain additional digits of accuracy.</p>
-<h2 id="6-estimator-bounds">6. Estimator Bounds</h2>
+<h2 id="7-estimator-bounds">7. Estimator Bounds</h2>
 <p>The number of points inside the quarter circle satisfies</p>
 <div class="arithmatex">\[
 0\leq K\leq N.
@@ -294,7 +329,7 @@ p(1-p).
 0\leq\hat{\pi}\leq4.
 \]</div>
 <p>This provides a simple mathematical invariant that can be verified through automated testing.</p>
-<h2 id="7-limitations">7. Limitations</h2>
+<h2 id="8-limitations">8. Limitations</h2>
 <p>Although the estimator converges to <span class="arithmatex">\(\pi\)</span>, Monte Carlo methods have relatively slow convergence.</p>
 <p>The standard error decreases according to</p>
 <div class="arithmatex">\[

@@ -64,6 +64,8 @@
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a>
     </li>
+    <li class="toctree-l2"><a class="reference internal" href="#the-benchmark-measures-execution-time-and-speedup-ratio-for-a-set-number-of-points-generated">The benchmark measures execution time and speedup ratio for a set number of points generated</a>
+    </li>
     <li class="toctree-l2"><a class="reference internal" href="#mathematical-problem">Mathematical Problem</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#implementations">Implementations</a>
@@ -76,11 +78,11 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#benchmark-methodology">Benchmark Methodology</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#sample-sizes">Sample Sizes</a>
-    </li>
     <li class="toctree-l2"><a class="reference internal" href="#metrics">Metrics</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#expected-results">Expected Results</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#example-results">Example Results</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#interpreting-the-benchmark">Interpreting the Benchmark</a>
     </li>
@@ -128,8 +130,7 @@
 <li><strong>Vectorized implementation</strong> — performs the same computation using NumPy array operations.</li>
 </ol>
 <p>The purpose of the benchmark is to demonstrate the performance benefit of vectorization while confirming that both implementations perform the same mathematical computation.</p>
-<p>The benchmark measures <strong>execution time</strong> as the number of generated points increases.</p>
-<hr />
+<h2 id="the-benchmark-measures-execution-time-and-speedup-ratio-for-a-set-number-of-points-generated">The benchmark measures <em>execution time</em> and <em>speedup ratio</em> for a set number of points generated</h2>
 <h2 id="mathematical-problem">Mathematical Problem</h2>
 <p>The estimator samples points uniformly from the unit square</p>
 <div class="arithmatex">\[
@@ -156,16 +157,22 @@ x^2 + y^2 \leq 1.
 <p>The naive implementation processes the generated points one at a time.</p>
 <p>Conceptually, for each point:</p>
 <ol>
+<li>Initate trial</li>
 <li>Generate <span class="arithmatex">\(x\)</span> and <span class="arithmatex">\(y\)</span>.</li>
 <li>Compute <span class="arithmatex">\(x^2+y^2\)</span>.</li>
 <li>Determine whether the point is inside the quarter circle.</li>
 <li>Increment the count if it is inside.</li>
 <li>Compute the final estimate.</li>
+<li>Append list of estimates</li>
+<li>Initate next trial and repeat 2-6 for all trials</li>
+<li>Calculate average estimate</li>
 </ol>
 <p>This approach is straightforward and closely resembles the mathematical description of the algorithm.</p>
 <p>Its main disadvantage is that the individual operations are performed through Python-level iteration.</p>
 <h3 id="vectorized-implementation">Vectorized Implementation</h3>
-<p>The vectorized implementation generates the random coordinates as NumPy arrays and evaluates the entire collection using array operations.</p>
+<p>The vectorized implementation generates all points for every trial simultaneously as a matrix with shape (1,numTrials,numPoints,2).</p>
+<p>Then the inside-circle mask is applied to all points simultaenously which creates a boolen array of shape (1,numTrials,numPoints).</p>
+<p>The complete list of estimates is then calculated all at once.</p>
 <p>For example, the inside-circle condition can be evaluated as</p>
 <div class="arithmatex">\[
 x^2+y^2 \leq 1
@@ -186,37 +193,6 @@ x^2+y^2 \leq 1
 </ol>
 <p>A fixed random seed can be used when reproducibility of the generated sample is important.</p>
 <p>The benchmark is intended primarily as a <strong>performance comparison</strong>, so the exact estimate of <span class="arithmatex">\( \pi \)</span> is secondary to the execution time.</p>
-<hr />
-<h2 id="sample-sizes">Sample Sizes</h2>
-<p>The benchmark uses increasing numbers of generated points so that the scaling behavior of the two implementations can be observed.</p>
-<p>Example sample sizes include:</p>
-<table>
-<thead>
-<tr>
-<th style="text-align: right;">Number of points</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: right;"><span class="arithmatex">\(10^3\)</span></td>
-<td>Small input</td>
-</tr>
-<tr>
-<td style="text-align: right;"><span class="arithmatex">\(10^4\)</span></td>
-<td>Small-to-moderate input</td>
-</tr>
-<tr>
-<td style="text-align: right;"><span class="arithmatex">\(10^5\)</span></td>
-<td>Moderate input</td>
-</tr>
-<tr>
-<td style="text-align: right;"><span class="arithmatex">\(10^6\)</span></td>
-<td>Large input</td>
-</tr>
-</tbody>
-</table>
-<p>The <span class="arithmatex">\(10^6\)</span> case is particularly useful for demonstrating the difference between Python-level iteration and NumPy vectorization.</p>
 <hr />
 <h2 id="metrics">Metrics</h2>
 <p>The primary metric is <strong>execution time</strong>, measured in seconds.</p>
@@ -247,6 +223,34 @@ T(N)=O(N).
 <p>The naive implementation performs the repeated operations through Python iteration, while the vectorized implementation delegates bulk numerical operations to NumPy.</p>
 <p>Consequently, the vectorized implementation is expected to become increasingly advantageous as the number of generated points increases.</p>
 <p>Small inputs may show a smaller difference because fixed overhead can represent a larger fraction of the total execution time.</p>
+<hr />
+<h2 id="example-results">Example Results</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Method</th>
+<th style="text-align: left;">Execution Time</th>
+<th style="text-align: left;">Speedup</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Naive Loops</td>
+<td style="text-align: left;">0.1792s</td>
+<td style="text-align: left;">1.0x</td>
+</tr>
+<tr>
+<td style="text-align: left;">Vectorized MC</td>
+<td style="text-align: left;">0.0072s</td>
+<td style="text-align: left;">24.8x</td>
+</tr>
+<tr>
+<td style="text-align: left;">Vectorized QMC</td>
+<td style="text-align: left;">0.0156s</td>
+<td style="text-align: left;">11.5x</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2 id="interpreting-the-benchmark">Interpreting the Benchmark</h2>
 <p>The benchmark should not be interpreted as showing that vectorization changes the underlying Monte Carlo algorithm.</p>

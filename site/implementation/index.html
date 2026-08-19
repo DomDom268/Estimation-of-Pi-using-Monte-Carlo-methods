@@ -107,12 +107,6 @@
 \hat{\pi}=4\frac{K}{N}
 \]</div>
 <p>is implemented using Python and NumPy.</p>
-<p>The project contains two implementations:</p>
-<ul>
-<li>A naive Python implementation using explicit loops.</li>
-<li>A vectorized implementation using NumPy array operations.</li>
-</ul>
-<p>Both implementations perform the same mathematical computation.</p>
 <h2 id="2-random-number-generation">2. Random Number Generation</h2>
 <p>The simulation generates points uniformly from the unit square</p>
 <div class="arithmatex">\[
@@ -156,9 +150,8 @@ X^2+Y^2\leq1.
 \]</div>
 <p>The number of successful points is then used to calculate the estimator.</p>
 <h2 id="5-why-vectorization">5. Why Vectorization?</h2>
-<p>The mathematical algorithm did not change when moving from the naive implementation to the vectorized implementation.</p>
-<p>The difference is computational.</p>
-<p>The naive implementation relies heavily on Python-level iteration, while the vectorized implementation delegates array operations to optimized numerical routines provided by NumPy.</p>
+<p>Naive for loops in Python abided by a time constraint of O(n) which, after utlizing, I found to be too slow for my use case. </p>
+<p>Thus, I utilized NumPy vectorization to then increase the speed of my estimation when multiple simulations were needed. </p>
 <p>The performance difference is investigated in the benchmark section.</p>
 <h2 id="6-streamlit-interface">6. Streamlit Interface</h2>
 <p>The Streamlit interface intentionally provides a small number of user-controlled parameters.</p>

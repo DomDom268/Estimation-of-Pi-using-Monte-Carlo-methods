@@ -107,7 +107,11 @@
 <li>Select a random seed.</li>
 <li>Select a predetermined number of points.</li>
 <li>Run the Monte Carlo simulation.</li>
+<li>Compare between Monte Carlo and Quasi Monte Carlo Methods</li>
 <li>View the resulting estimate of <span class="arithmatex">\(\pi\)</span>.</li>
+<li>View the convergence of estimates towards <span class="arithmatex">\(\pi\)</span></li>
+<li>View the convergence of the absolute error of estimates against the theoretical decay</li>
+<li>View distribution plots for the estimates of <span class="arithmatex">\(\pi\)</span></li>
 </ul>
 <p>The project also includes an automated test suite and performance benchmarks comparing a naive Python implementation with a vectorized NumPy implementation.</p>
 <h2 id="mathematical-approach">Mathematical Approach</h2>
@@ -124,17 +128,18 @@ x^2+y^2 \leq 1.
 <h2 id="computational-approach">Computational Approach</h2>
 <p>Two implementations were developed:</p>
 <ol>
-<li>A naive implementation using Python loops.</li>
+<li>An inital naive implementation using Python loops.</li>
 <li>A vectorized implementation using NumPy operations.</li>
 </ol>
 <p>The mathematical estimator is identical in both implementations. The primary difference is how the computation is performed.</p>
-<p>The performance of the two implementations is evaluated using benchmarks.</p>
+<p>The performance of the two implementations is evaluated using benchmarks. <a href="benchmark/">Benchmarks</a></p>
 <h2 id="project-goals">Project Goals</h2>
 <p>The primary goals of this project are to:</p>
 <ul>
 <li>Implement a Monte Carlo estimator for <span class="arithmatex">\(\pi\)</span>.</li>
 <li>Understand the mathematical basis of the estimator.</li>
 <li>Investigate convergence and estimation error.</li>
+<li>Compare Monte Carlo and Quasi Monte Carlo methods</li>
 <li>Compare naive and vectorized implementations.</li>
 <li>Develop reproducible computational experiments.</li>
 <li>Practice automated testing with <code>pytest</code>.</li>
@@ -197,5 +202,5 @@ x^2+y^2 \leq 1.
 
 <!--
 MkDocs version : 1.6.1
-Build Date UTC : 2026-08-18 20:20:57.732722+00:00
+Build Date UTC : 2026-08-19 02:36:32.314524+00:00
 -->
