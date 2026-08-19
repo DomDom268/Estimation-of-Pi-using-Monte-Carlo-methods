@@ -23,7 +23,7 @@ selected_points = st.sidebar.radio(
 )
 
 if st.sidebar.button(f"Estimate Pi with {selected_points} generated"):
-    u.estimation(selected_points,rng,seed)
+    u.estimation(selected_points,seed)
     
 
 if st.sidebar.button("Plot convergence of average estimate for 1000 simulations"):
