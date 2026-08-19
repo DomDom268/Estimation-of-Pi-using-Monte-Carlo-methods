@@ -453,12 +453,17 @@ def histogram2(rng,sampler,numPoints):
     qmc_point=qmc_raw.reshape(shape)
 
     #Call estimate_pi for mc methods
-    mc_est,_ = estimate_pi_1000(mc_point,numPoints)
+    mc_est,mc_err_raw= estimate_pi_1000(mc_point,numPoints)
     pi_est = mc_est.ravel()
+    mc_err = mc_err_raw.ravel()
 
     #Call estimate_pi for qmc methods
-    qmc_est,_ = estimate_pi_1000(qmc_point,numPoints)
+    qmc_est,qmc_err_raw = estimate_pi_1000(qmc_point,numPoints)
     pi_qmc = qmc_est.ravel()
+    qmc_err = qmc_err_raw.ravel()
+
+    mean,mse,mae,var,std,min,max = descriptive_stats(pi_est,mc_err)
+    qmc_mean,qmc_mse,qmc_mae,qmc_var,qmc_std,qmc_min,qmc_max = descriptive_stats(qmc_est,qmc_err)
 
 
     #Plot histogram
@@ -469,7 +474,32 @@ def histogram2(rng,sampler,numPoints):
     ax.axvline(x=np.pi,color='black',linestyle='--',linewidth=1.5,label='Pi')
     ax.legend()
     ax.set_title(f"Comparison of Estimates: N={numPoints}; Number of Sims=1000")
-    return fig
+    st.pyplot(fig)
+
+    col1,col2 = st.columns(2)
+
+    with col1:
+        st.subheader("Monte Carlo")
+        st.metric("μ",value=f"{mean}",border=True)
+        st.metric("σ",value=f"{std}",border=True)
+
+    with col2:
+        st.subheader("Quasi Monte Carlo")
+        st.metric("μ",value=f"{qmc_mean}",border=True)
+        st.metric("σ",value=f"{qmc_std}",border=True)
+
+    table=pd.DataFrame({
+        "Method":["Monte Carlo","Quasi Monte Carlo"],
+        "Mean":[mean,qmc_mean],
+        "Mean Squared Error":[mse,qmc_mse],
+        "Mean Absolute Error":[mae,qmc_mae],
+        "Variance":[var,qmc_var],
+        "Standard Deviation":[std,qmc_std],
+        "Max Estimate":[max,qmc_max],
+        "Min Estimate":[min,qmc_min]
+    })
+
+    st.table(table,border=True,width="stretch",height="content",hide_index=True)
 
 
 

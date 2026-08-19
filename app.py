@@ -41,9 +41,9 @@ if st.sidebar.button("Plot convergence of mae for 1000 simulations"):
     st.pyplot(mae_fig)
 
 if st.sidebar.button(f"Plot distribution of estimates over 1000 simulations for {selected_points} generated"):
-    fig = u.histogram2(rng,sampler,selected_points)
-    st.pyplot(fig)
-
+    # fig = u.histogram2(rng,sampler,selected_points)
+    # st.pyplot(fig)
+    u.histogram2(rng,sampler,selected_points)
 
 
     
