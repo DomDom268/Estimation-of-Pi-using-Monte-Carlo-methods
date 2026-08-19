@@ -145,8 +145,8 @@ with smaller number of points generated
 Clone the repository:
 
 ```bash
-git clone https://github.com/your-username/monte-carlo-pi.git
-cd monte-carlo-pi
+git clone https://github.com/DomDom268/Estimation-of-Pi-using-Monte-Carlo-methods.git
+cd Estimation-of-Pi-using-Monte-Carlo-methods
 ```
 
 Install dependencies:

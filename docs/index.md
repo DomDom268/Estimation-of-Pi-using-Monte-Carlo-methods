@@ -11,7 +11,11 @@ The application provides an interactive Streamlit interface where users can:
 - Select a random seed.
 - Select a predetermined number of points.
 - Run the Monte Carlo simulation.
+- Compare between Monte Carlo and Quasi Monte Carlo Methods
 - View the resulting estimate of $\pi$.
+- View the convergence of estimates towards $\pi$
+- View the convergence of the absolute error of estimates against the theoretical decay
+- View distribution plots for the estimates of $\pi$
 
 The project also includes an automated test suite and performance benchmarks comparing a naive Python implementation with a vectorized NumPy implementation.
 
@@ -37,12 +41,12 @@ A more detailed derivation is provided in the [Mathematical Foundation](mathemat
 
 Two implementations were developed:
 
-1. A naive implementation using Python loops.
+1. An inital naive implementation using Python loops.
 2. A vectorized implementation using NumPy operations.
 
 The mathematical estimator is identical in both implementations. The primary difference is how the computation is performed.
 
-The performance of the two implementations is evaluated using benchmarks.
+The performance of the two implementations is evaluated using benchmarks. [Benchmarks](benchmark.md)
 
 ## Project Goals
 
@@ -51,6 +55,7 @@ The primary goals of this project are to:
 - Implement a Monte Carlo estimator for $\pi$.
 - Understand the mathematical basis of the estimator.
 - Investigate convergence and estimation error.
+- Compare Monte Carlo and Quasi Monte Carlo methods
 - Compare naive and vectorized implementations.
 - Develop reproducible computational experiments.
 - Practice automated testing with `pytest`.

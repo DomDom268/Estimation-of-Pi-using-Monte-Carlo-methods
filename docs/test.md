@@ -58,8 +58,8 @@ Examples include:
 
 - Small numbers of points.
 - Different valid seeds.
-- Boundary values for supported sample sizes.
-- Invalid input where applicable.
+- Case when all points fall inside quarter circle
+- Case when all points fall outside quarter circle
 
 These tests help ensure that the implementation behaves predictably outside of the typical demonstration cases.
 

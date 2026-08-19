@@ -95,7 +95,21 @@ $$
 \sum_{i=1}^{N}I_i.
 $$
 
-## 3. Expected Value
+## 3. Monte Carlo vs Quasi Monte Carlo
+
+These are both methods of numerical integration and simulation, however they differ in how the sample points are generated and in their convergence properties. 
+
+In this project I chose to use SOBOL as my Quasi Monte Carlo Method. A comparison in methods can be found in the table below:
+
+| Monte Carlo | Sobol |
+|-------------|---------------------------------------------------------------------------------|
+|Sampling in pseudorandom|Sampling is deterministic and designed to be more uniformly distributed|
+|$O(N^{-1/2})$ Convergence | $O(N^{-1})$ Convergence|
+|Simple and robust|More complicated to implement|
+|Slow convergence|Faster convergence|
+|Works well in high dimension|Works best in low-medium dimension|
+
+## 4. Expected Value
 
 Since each $I_i$ is a Bernoulli random variable with
 
@@ -150,7 +164,7 @@ $$
 
 and the estimator is unbiased.
 
-## 4. Convergence
+## 5. Convergence
 
 By the Law of Large Numbers,
 
@@ -179,7 +193,7 @@ Thus, increasing the number of samples causes the Monte Carlo estimate to conver
 
 However, convergence does not imply that every individual estimate becomes progressively closer to $\pi$. Because the method is stochastic, individual estimates may fluctuate.
 
-## 5. Variance and Error
+## 6. Variance and Error
 
 Because $I_i$ is Bernoulli with
 
@@ -244,7 +258,7 @@ $$
 
 Therefore, substantially more samples are required to obtain additional digits of accuracy.
 
-## 6. Estimator Bounds
+## 7. Estimator Bounds
 
 The number of points inside the quarter circle satisfies
 
@@ -266,7 +280,7 @@ $$
 
 This provides a simple mathematical invariant that can be verified through automated testing.
 
-## 7. Limitations
+## 8. Limitations
 
 Although the estimator converges to $\pi$, Monte Carlo methods have relatively slow convergence.
 

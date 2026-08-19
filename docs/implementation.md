@@ -10,12 +10,6 @@ $$
 
 is implemented using Python and NumPy.
 
-The project contains two implementations:
-
-- A naive Python implementation using explicit loops.
-- A vectorized implementation using NumPy array operations.
-
-Both implementations perform the same mathematical computation.
 
 ## 2. Random Number Generation
 
@@ -81,11 +75,9 @@ The number of successful points is then used to calculate the estimator.
 
 ## 5. Why Vectorization?
 
-The mathematical algorithm did not change when moving from the naive implementation to the vectorized implementation.
+Naive for loops in Python abided by a time constraint of O(n) which, after utlizing, I found to be too slow for my use case. 
 
-The difference is computational.
-
-The naive implementation relies heavily on Python-level iteration, while the vectorized implementation delegates array operations to optimized numerical routines provided by NumPy.
+Thus, I utilized NumPy vectorization to then increase the speed of my estimation when multiple simulations were needed. 
 
 The performance difference is investigated in the benchmark section.
 

@@ -9,8 +9,7 @@ This project benchmarks two implementations of the Monte Carlo estimator for \( 
 
 The purpose of the benchmark is to demonstrate the performance benefit of vectorization while confirming that both implementations perform the same mathematical computation.
 
-The benchmark measures **execution time** as the number of generated points increases.
-
+The benchmark measures *execution time* and *speedup ratio* for a set number of points generated
 ---
 
 ## Mathematical Problem
@@ -53,11 +52,15 @@ The naive implementation processes the generated points one at a time.
 
 Conceptually, for each point:
 
-1. Generate \(x\) and \(y\).
+1. Initate trial
+2. Generate \(x\) and \(y\).
 2. Compute \(x^2+y^2\).
 3. Determine whether the point is inside the quarter circle.
 4. Increment the count if it is inside.
 5. Compute the final estimate.
+6. Append list of estimates
+7. Initate next trial and repeat 2-6 for all trials
+8. Calculate average estimate
 
 This approach is straightforward and closely resembles the mathematical description of the algorithm.
 
@@ -65,7 +68,12 @@ Its main disadvantage is that the individual operations are performed through Py
 
 ### Vectorized Implementation
 
-The vectorized implementation generates the random coordinates as NumPy arrays and evaluates the entire collection using array operations.
+The vectorized implementation generates all points for every trial simultaneously as a matrix with shape (1,numTrials,numPoints,2).
+
+Then the inside-circle mask is applied to all points simultaenously which creates a boolen array of shape (1,numTrials,numPoints).
+
+The complete list of estimates is then calculated all at once.
+
 
 For example, the inside-circle condition can be evaluated as
 
@@ -95,23 +103,6 @@ For each sample size:
 A fixed random seed can be used when reproducibility of the generated sample is important.
 
 The benchmark is intended primarily as a **performance comparison**, so the exact estimate of \( \pi \) is secondary to the execution time.
-
----
-
-## Sample Sizes
-
-The benchmark uses increasing numbers of generated points so that the scaling behavior of the two implementations can be observed.
-
-Example sample sizes include:
-
-| Number of points | Purpose |
-|---:|---|
-| \(10^3\) | Small input |
-| \(10^4\) | Small-to-moderate input |
-| \(10^5\) | Moderate input |
-| \(10^6\) | Large input |
-
-The \(10^6\) case is particularly useful for demonstrating the difference between Python-level iteration and NumPy vectorization.
 
 ---
 
@@ -161,6 +152,16 @@ The naive implementation performs the repeated operations through Python iterati
 Consequently, the vectorized implementation is expected to become increasingly advantageous as the number of generated points increases.
 
 Small inputs may show a smaller difference because fixed overhead can represent a larger fraction of the total execution time.
+
+---
+
+## Example Results
+
+|Method|Execution Time|Speedup|
+|:------|:------|:------|
+|Naive Loops|0.1792s|1.0x|
+|Vectorized MC|0.0072s|24.8x|
+|Vectorized QMC|0.0156s|11.5x|
 
 ---
 
