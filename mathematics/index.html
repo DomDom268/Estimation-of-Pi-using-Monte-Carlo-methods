@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Mathematics - Pi-thon</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Mathematics";
+        var mkdocs_page_input_path = "mathematics.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Pi-thon
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../user_guide/">Getting Started</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Mathematics</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#1-geometric-interpretation">1. Geometric Interpretation</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#2-monte-carlo-estimator">2. Monte Carlo Estimator</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#3-monte-carlo-vs-quasi-monte-carlo">3. Monte Carlo vs Quasi Monte Carlo</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#4-expected-value">4. Expected Value</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#5-convergence">5. Convergence</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#6-variance-and-error">6. Variance and Error</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#7-estimator-bounds">7. Estimator Bounds</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#8-limitations">8. Limitations</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../implementation/">Implementation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../test/">Testing</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../benchmark/">Benchmarks</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Pi-thon</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Mathematics</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="mathematical-foundation">Mathematical Foundation</h1>
+<h2 id="1-geometric-interpretation">1. Geometric Interpretation</h2>
+<p>The Monte Carlo estimator for <span class="arithmatex">\(\pi\)</span> is based on the area of a quarter circle with radius <span class="arithmatex">\(1\)</span>.</p>
+<p>The area of a full circle is</p>
+<div class="arithmatex">\[
+A=\pi r^2.
+\]</div>
+<p>For <span class="arithmatex">\(r=1\)</span>,</p>
+<div class="arithmatex">\[
+A=\pi.
+\]</div>
+<p>Therefore, the area of a quarter circle is</p>
+<div class="arithmatex">\[
+A_{\text{quarter}}=\frac{\pi}{4}.
+\]</div>
+<p>Consider the unit square</p>
+<div class="arithmatex">\[
+[0,1]\times[0,1].
+\]</div>
+<p>Its area is</p>
+<div class="arithmatex">\[
+A_{\text{square}}=1.
+\]</div>
+<p>The probability that a uniformly distributed point <span class="arithmatex">\((X,Y)\)</span> in the unit square falls inside the quarter circle is therefore</p>
+<div class="arithmatex">\[
+P(X^2+Y^2\leq1)
+=
+\frac{\pi/4}{1}
+=
+\frac{\pi}{4}.
+\]</div>
+<p>This relationship allows <span class="arithmatex">\(\pi\)</span> to be estimated using randomly generated points.</p>
+<h2 id="2-monte-carlo-estimator">2. Monte Carlo Estimator</h2>
+<p>Suppose that <span class="arithmatex">\(N\)</span> independent points</p>
+<div class="arithmatex">\[
+(X_1,Y_1),\ldots,(X_N,Y_N)
+\]</div>
+<p>are generated uniformly from the unit square.</p>
+<p>Define the indicator variable</p>
+<div class="arithmatex">\[
+I_i =
+\begin{cases}
+1, &amp; X_i^2+Y_i^2\leq1,\\
+0, &amp; X_i^2+Y_i^2&gt;1.
+\end{cases}
+\]</div>
+<p>The number of points inside the quarter circle is</p>
+<div class="arithmatex">\[
+K=\sum_{i=1}^{N}I_i.
+\]</div>
+<p>The proportion of points inside the quarter circle is therefore</p>
+<div class="arithmatex">\[
+\frac{K}{N}.
+\]</div>
+<p>Since this proportion estimates <span class="arithmatex">\(\pi/4\)</span>, the Monte Carlo estimator for <span class="arithmatex">\(\pi\)</span> is</p>
+<div class="arithmatex">\[
+\boxed{
+\hat{\pi}=4\frac{K}{N}
+}
+\]</div>
+<p>or equivalently,</p>
+<div class="arithmatex">\[
+\hat{\pi}
+=
+\frac{4}{N}
+\sum_{i=1}^{N}I_i.
+\]</div>
+<h2 id="3-monte-carlo-vs-quasi-monte-carlo">3. Monte Carlo vs Quasi Monte Carlo</h2>
+<p>These are both methods of numerical integration and simulation, however they differ in how the sample points are generated and in their convergence properties. </p>
+<p>In this project I chose to use SOBOL as my Quasi Monte Carlo Method. A comparison in methods can be found in the table below:</p>
+<table>
+<thead>
+<tr>
+<th>Monte Carlo</th>
+<th>Sobol</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sampling in pseudorandom</td>
+<td>Sampling is deterministic and designed to be more uniformly distributed</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(O(N^{-1/2})\)</span> Convergence</td>
+<td><span class="arithmatex">\(O(N^{-1})\)</span> Convergence</td>
+</tr>
+<tr>
+<td>Simple and robust</td>
+<td>More complicated to implement</td>
+</tr>
+<tr>
+<td>Slow convergence</td>
+<td>Faster convergence</td>
+</tr>
+<tr>
+<td>Works well in high dimension</td>
+<td>Works best in low-medium dimension</td>
+</tr>
+</tbody>
+</table>
+<h2 id="4-expected-value">4. Expected Value</h2>
+<p>Since each <span class="arithmatex">\(I_i\)</span> is a Bernoulli random variable with</p>
+<div class="arithmatex">\[
+p=P(X_i^2+Y_i^2\leq1)=\frac{\pi}{4},
+\]</div>
+<p>we have</p>
+<div class="arithmatex">\[
+E[I_i]=\frac{\pi}{4}.
+\]</div>
+<p>Therefore,</p>
+<div class="arithmatex">\[
+E[\hat{\pi}]
+=
+E\left[
+\frac{4}{N}
+\sum_{i=1}^{N}I_i
+\right].
+\]</div>
+<p>By linearity of expectation,</p>
+<div class="arithmatex">\[
+E[\hat{\pi}]
+=
+\frac{4}{N}
+\sum_{i=1}^{N}E[I_i].
+\]</div>
+<p>Thus,</p>
+<div class="arithmatex">\[
+E[\hat{\pi}]
+=
+\frac{4}{N}
+\left(
+N\frac{\pi}{4}
+\right)
+=
+\pi.
+\]</div>
+<p>Therefore,</p>
+<div class="arithmatex">\[
+\boxed{E[\hat{\pi}]=\pi}
+\]</div>
+<p>and the estimator is unbiased.</p>
+<h2 id="5-convergence">5. Convergence</h2>
+<p>By the Law of Large Numbers,</p>
+<div class="arithmatex">\[
+\frac{1}{N}\sum_{i=1}^{N}I_i
+\rightarrow
+E[I_i]
+=
+\frac{\pi}{4}
+\]</div>
+<p>as <span class="arithmatex">\(N\rightarrow\infty\)</span>.</p>
+<p>Consequently,</p>
+<div class="arithmatex">\[
+\hat{\pi}
+=
+4\frac{1}{N}
+\sum_{i=1}^{N}I_i
+\rightarrow
+\pi.
+\]</div>
+<p>Thus, increasing the number of samples causes the Monte Carlo estimate to converge toward <span class="arithmatex">\(\pi\)</span>.</p>
+<p>However, convergence does not imply that every individual estimate becomes progressively closer to <span class="arithmatex">\(\pi\)</span>. Because the method is stochastic, individual estimates may fluctuate.</p>
+<h2 id="6-variance-and-error">6. Variance and Error</h2>
+<p>Because <span class="arithmatex">\(I_i\)</span> is Bernoulli with</p>
+<div class="arithmatex">\[
+p=\frac{\pi}{4},
+\]</div>
+<p>its variance is</p>
+<div class="arithmatex">\[
+\operatorname{Var}(I_i)
+=
+p(1-p).
+\]</div>
+<p>Therefore,</p>
+<div class="arithmatex">\[
+\operatorname{Var}(\hat{\pi})
+=
+\frac{16}{N}
+p(1-p).
+\]</div>
+<p>Substituting <span class="arithmatex">\(p=\pi/4\)</span> gives</p>
+<div class="arithmatex">\[
+\operatorname{Var}(\hat{\pi})
+=
+\frac{16}{N}
+\frac{\pi}{4}
+\left(1-\frac{\pi}{4}\right).
+\]</div>
+<p>Simplifying,</p>
+<div class="arithmatex">\[
+\boxed{
+\operatorname{Var}(\hat{\pi})
+=
+\frac{4\pi}{N}
+\left(1-\frac{\pi}{4}\right)
+}
+\]</div>
+<p>and therefore the standard deviation satisfies</p>
+<div class="arithmatex">\[
+\operatorname{SD}(\hat{\pi})
+=
+\sqrt{
+\frac{4\pi}{N}
+\left(1-\frac{\pi}{4}\right)
+}.
+\]</div>
+<p>The important computational consequence is that the standard error decreases at a rate proportional to</p>
+<div class="arithmatex">\[
+\frac{1}{\sqrt{N}}.
+\]</div>
+<p>Therefore, substantially more samples are required to obtain additional digits of accuracy.</p>
+<h2 id="7-estimator-bounds">7. Estimator Bounds</h2>
+<p>The number of points inside the quarter circle satisfies</p>
+<div class="arithmatex">\[
+0\leq K\leq N.
+\]</div>
+<p>Therefore,</p>
+<div class="arithmatex">\[
+0\leq\frac{K}{N}\leq1.
+\]</div>
+<p>Multiplying by <span class="arithmatex">\(4\)</span> gives</p>
+<div class="arithmatex">\[
+0\leq\hat{\pi}\leq4.
+\]</div>
+<p>This provides a simple mathematical invariant that can be verified through automated testing.</p>
+<h2 id="8-limitations">8. Limitations</h2>
+<p>Although the estimator converges to <span class="arithmatex">\(\pi\)</span>, Monte Carlo methods have relatively slow convergence.</p>
+<p>The standard error decreases according to</p>
+<div class="arithmatex">\[
+O(N^{-1/2}).
+\]</div>
+<p>Consequently, reducing the error by a factor of <span class="arithmatex">\(10\)</span> generally requires approximately <span class="arithmatex">\(100\)</span> times as many samples.</p>
+<p>The method is therefore useful for demonstrating probabilistic numerical computation, but it is not an efficient method for computing many digits of <span class="arithmatex">\(\pi\)</span>.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../user_guide/" class="btn btn-neutral float-left" title="Getting Started"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../implementation/" class="btn btn-neutral float-right" title="Implementation">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../user_guide/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../implementation/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

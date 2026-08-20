@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Benchmarks - Pi-thon</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Benchmarks";
+        var mkdocs_page_input_path = "benchmark.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Pi-thon
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../user_guide/">Getting Started</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../mathematics/">Mathematics</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../implementation/">Implementation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../test/">Testing</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Benchmarks</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#the-benchmark-measures-execution-time-and-speedup-ratio-for-a-set-number-of-points-generated">The benchmark measures execution time and speedup ratio for a set number of points generated</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#mathematical-problem">Mathematical Problem</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#implementations">Implementations</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#naive-implementation">Naive Implementation</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#vectorized-implementation">Vectorized Implementation</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#benchmark-methodology">Benchmark Methodology</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#metrics">Metrics</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#expected-results">Expected Results</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#example-results">Example Results</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#interpreting-the-benchmark">Interpreting the Benchmark</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#reproducibility">Reproducibility</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#relationship-to-testing">Relationship to Testing</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#reproducing-the-benchmark">Reproducing the Benchmark</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#limitations">Limitations</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#summary">Summary</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Pi-thon</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Benchmarks</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="benchmarking-execution-time">Benchmarking Execution Time</h1>
+<h2 id="overview">Overview</h2>
+<p>This project benchmarks two implementations of the Monte Carlo estimator for <span class="arithmatex">\( \pi \)</span>:</p>
+<ol>
+<li><strong>Naive implementation</strong> — generates random points and checks each point individually using Python loops.</li>
+<li><strong>Vectorized implementation</strong> — performs the same computation using NumPy array operations.</li>
+</ol>
+<p>The purpose of the benchmark is to demonstrate the performance benefit of vectorization while confirming that both implementations perform the same mathematical computation.</p>
+<h2 id="the-benchmark-measures-execution-time-and-speedup-ratio-for-a-set-number-of-points-generated">The benchmark measures <em>execution time</em> and <em>speedup ratio</em> for a set number of points generated</h2>
+<h2 id="mathematical-problem">Mathematical Problem</h2>
+<p>The estimator samples points uniformly from the unit square</p>
+<div class="arithmatex">\[
+[0,1]^2.
+\]</div>
+<p>A point <span class="arithmatex">\( (x,y) \)</span> is inside the quarter circle when</p>
+<div class="arithmatex">\[
+x^2 + y^2 \leq 1.
+\]</div>
+<p>The area of the quarter circle is</p>
+<div class="arithmatex">\[
+\frac{\pi}{4}.
+\]</div>
+<p>Therefore, if <span class="arithmatex">\(N\)</span> points are generated and <span class="arithmatex">\(N_{\text{inside}}\)</span> fall inside the quarter circle, the Monte Carlo estimate is</p>
+<div class="arithmatex">\[
+\hat{\pi}
+=
+4\frac{N_{\text{inside}}}{N}.
+\]</div>
+<p>Both implementations use this same estimator. The benchmark therefore focuses on the computational cost of evaluating it rather than comparing different mathematical methods.</p>
+<hr />
+<h2 id="implementations">Implementations</h2>
+<h3 id="naive-implementation">Naive Implementation</h3>
+<p>The naive implementation processes the generated points one at a time.</p>
+<p>Conceptually, for each point:</p>
+<ol>
+<li>Initate trial</li>
+<li>Generate <span class="arithmatex">\(x\)</span> and <span class="arithmatex">\(y\)</span>.</li>
+<li>Compute <span class="arithmatex">\(x^2+y^2\)</span>.</li>
+<li>Determine whether the point is inside the quarter circle.</li>
+<li>Increment the count if it is inside.</li>
+<li>Compute the final estimate.</li>
+<li>Append list of estimates</li>
+<li>Initate next trial and repeat 2-6 for all trials</li>
+<li>Calculate average estimate</li>
+</ol>
+<p>This approach is straightforward and closely resembles the mathematical description of the algorithm.</p>
+<p>Its main disadvantage is that the individual operations are performed through Python-level iteration.</p>
+<h3 id="vectorized-implementation">Vectorized Implementation</h3>
+<p>The vectorized implementation generates all points for every trial simultaneously as a matrix with shape (1,numTrials,numPoints,2).</p>
+<p>Then the inside-circle mask is applied to all points simultaenously which creates a boolen array of shape (1,numTrials,numPoints).</p>
+<p>The complete list of estimates is then calculated all at once.</p>
+<p>For example, the inside-circle condition can be evaluated as</p>
+<div class="arithmatex">\[
+x^2+y^2 \leq 1
+\]</div>
+<p>for all sampled points simultaneously.</p>
+<p>NumPy performs these operations using optimized compiled code, avoiding the overhead of repeatedly executing the same operations in a Python loop.</p>
+<hr />
+<h2 id="benchmark-methodology">Benchmark Methodology</h2>
+<p>The benchmark should be run under the same environment for both implementations.</p>
+<p>For each sample size:</p>
+<ol>
+<li>Generate the same number of random points.</li>
+<li>Run the naive implementation.</li>
+<li>Run the vectorized implementation.</li>
+<li>Record the execution time.</li>
+<li>Repeat the measurement when appropriate to reduce the influence of temporary system load.</li>
+<li>Compare the resulting execution times.</li>
+</ol>
+<p>A fixed random seed can be used when reproducibility of the generated sample is important.</p>
+<p>The benchmark is intended primarily as a <strong>performance comparison</strong>, so the exact estimate of <span class="arithmatex">\( \pi \)</span> is secondary to the execution time.</p>
+<hr />
+<h2 id="metrics">Metrics</h2>
+<p>The primary metric is <strong>execution time</strong>, measured in seconds.</p>
+<p>For an input of <span class="arithmatex">\(N\)</span> points, define</p>
+<div class="arithmatex">\[
+T_{\text{naive}}(N)
+\]</div>
+<p>as the execution time of the naive implementation and</p>
+<div class="arithmatex">\[
+T_{\text{vectorized}}(N)
+\]</div>
+<p>as the execution time of the vectorized implementation.</p>
+<p>The speedup of the vectorized implementation can then be expressed as</p>
+<div class="arithmatex">\[
+S(N)
+=
+\frac{T_{\text{naive}}(N)}
+{T_{\text{vectorized}}(N)}.
+\]</div>
+<p>A value of <span class="arithmatex">\(S(N)=5\)</span>, for example, means that the vectorized implementation completed the benchmark approximately five times faster.</p>
+<hr />
+<h2 id="expected-results">Expected Results</h2>
+<p>Both implementations should have approximately the same computational behavior with respect to the number of points:</p>
+<div class="arithmatex">\[
+T(N)=O(N).
+\]</div>
+<p>The important difference is the constant factor associated with how the work is performed.</p>
+<p>The naive implementation performs the repeated operations through Python iteration, while the vectorized implementation delegates bulk numerical operations to NumPy.</p>
+<p>Consequently, the vectorized implementation is expected to become increasingly advantageous as the number of generated points increases.</p>
+<p>Small inputs may show a smaller difference because fixed overhead can represent a larger fraction of the total execution time.</p>
+<hr />
+<h2 id="example-results">Example Results</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Method</th>
+<th style="text-align: left;">Execution Time</th>
+<th style="text-align: left;">Speedup</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Naive Loops</td>
+<td style="text-align: left;">0.1792s</td>
+<td style="text-align: left;">1.0x</td>
+</tr>
+<tr>
+<td style="text-align: left;">Vectorized MC</td>
+<td style="text-align: left;">0.0072s</td>
+<td style="text-align: left;">24.8x</td>
+</tr>
+<tr>
+<td style="text-align: left;">Vectorized QMC</td>
+<td style="text-align: left;">0.0156s</td>
+<td style="text-align: left;">11.5x</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="interpreting-the-benchmark">Interpreting the Benchmark</h2>
+<p>The benchmark should not be interpreted as showing that vectorization changes the underlying Monte Carlo algorithm.</p>
+<p>Both implementations perform the same mathematical procedure:</p>
+<div class="arithmatex">\[
+\hat{\pi}
+=
+4\frac{N_{\text{inside}}}{N}.
+\]</div>
+<p>The performance improvement comes from <strong>how the computation is implemented</strong>.</p>
+<p>This provides a useful example of the distinction between:</p>
+<ul>
+<li><strong>Algorithmic complexity</strong> — both implementations are <span class="arithmatex">\(O(N)\)</span>.</li>
+<li><strong>Implementation efficiency</strong> — vectorized numerical operations can have substantially lower constant overhead than Python-level loops.</li>
+</ul>
+<p>This distinction is important when implementing computational mathematics algorithms in Python.</p>
+<hr />
+<h2 id="reproducibility">Reproducibility</h2>
+<p>The project accepts a user-defined random seed. Using the same seed and sample size allows the random-number generation process to be reproduced.</p>
+<p>The test suite verifies seed reproducibility separately from the performance benchmark.</p>
+<p>Benchmark results themselves may vary between runs because of:</p>
+<ul>
+<li>CPU load</li>
+<li>operating-system scheduling</li>
+<li>Python and NumPy versions</li>
+<li>hardware differences</li>
+<li>background processes</li>
+<li>memory/cache effects</li>
+</ul>
+<p>Therefore, benchmark results should be interpreted as measurements for a particular computational environment rather than universal execution times.</p>
+<hr />
+<h2 id="relationship-to-testing">Relationship to Testing</h2>
+<p>Performance benchmarks are separate from correctness tests.</p>
+<p>The test suite verifies properties such as:</p>
+<ul>
+<li>estimates are within the valid range <span class="arithmatex">\( [0,4] \)</span>;</li>
+<li>the same seed produces reproducible results;</li>
+<li>the estimator behaves consistently for supported inputs.</li>
+</ul>
+<p>The benchmark instead asks:</p>
+<blockquote>
+<p>How efficiently can the implementation perform the computation?</p>
+</blockquote>
+<p>Keeping these concerns separate makes the project easier to maintain and prevents performance measurements from being treated as correctness tests.</p>
+<hr />
+<h2 id="reproducing-the-benchmark">Reproducing the Benchmark</h2>
+<p>The benchmark can be run using the project's benchmark script or notebook.</p>
+<p>When reporting results, include the computational environment when possible:</p>
+<ul>
+<li>Python version</li>
+<li>NumPy version</li>
+<li>operating system</li>
+<li>CPU</li>
+<li>sample sizes</li>
+<li>number of repetitions</li>
+<li>random seed, if applicable</li>
+</ul>
+<p>This information makes it easier to reproduce and interpret the measurements.</p>
+<hr />
+<h2 id="limitations">Limitations</h2>
+<p>These benchmarks measure the implementations used in this project and should not be interpreted as a general comparison of all Monte Carlo implementations.</p>
+<p>In particular, execution time can change substantially depending on:</p>
+<ul>
+<li>the random-number generator;</li>
+<li>the NumPy version;</li>
+<li>the processor;</li>
+<li>memory availability;</li>
+<li>whether random-number generation is included in the timing;</li>
+<li>the number of repetitions;</li>
+<li>the benchmarking methodology.</li>
+</ul>
+<p>The benchmark also does not measure statistical convergence. Convergence and estimation error are separate mathematical properties of the Monte Carlo method.</p>
+<hr />
+<h2 id="summary">Summary</h2>
+<p>The benchmark demonstrates a central computational-mathematics lesson:</p>
+<blockquote>
+<p>Two implementations can have the same mathematical algorithm and the same asymptotic complexity while having very different practical execution times.</p>
+</blockquote>
+<p>For this project, both the naive and vectorized implementations use the same Monte Carlo estimator, but vectorization reduces Python-level iteration and allows NumPy to perform bulk numerical operations efficiently.</p>
+<p>The benchmark therefore serves as both a performance study and an example of translating a mathematical algorithm into multiple computational implementations.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../test/" class="btn btn-neutral float-left" title="Testing"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../test/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
