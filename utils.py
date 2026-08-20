@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 from scipy.stats import qmc
 
-num_trials=1000
+num_trials=100
 
 @st.cache_data
 def generate_xy(seed:int,numPoints: int):

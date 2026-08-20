@@ -27,17 +27,17 @@ if st.sidebar.button(f"Estimate Pi with {selected_points} generated"):
     
 
 if st.sidebar.button("Plot convergence of average estimate for 1000 simulations"):
-    mc_est,mc_err = u.simulations(rng,points)
-    qmc_est,qmc_err = u.qmc_simulations(sampler,points)
+    mc_est,mc_err = u.simulations(rng,points[0:4])
+    qmc_est,qmc_err = u.qmc_simulations(sampler,points[0:4])
 
-    convergence_fig = u.pi_convergence(mc_est,qmc_est,points)
+    convergence_fig = u.pi_convergence(mc_est,qmc_est,points[0:4])
     st.pyplot(convergence_fig)
 
 if st.sidebar.button("Plot convergence of mae for 1000 simulations"):
-    mc_est,mc_err = u.simulations(rng,points)
-    qmc_est,qmc_err = u.qmc_simulations(sampler,points)
+    mc_est,mc_err = u.simulations(rng,points[0:4])
+    qmc_est,qmc_err = u.qmc_simulations(sampler,points[0:4])
 
-    mae_fig = u.mae_convergence(mc_err,qmc_err,points)
+    mae_fig = u.mae_convergence(mc_err,qmc_err,points[0:4])
     st.pyplot(mae_fig)
 
 if st.sidebar.button(f"Plot distribution of estimates over 1000 simulations for {selected_points} generated"):
